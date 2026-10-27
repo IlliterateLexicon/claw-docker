@@ -2,9 +2,6 @@
 from alpine as build 
 run apk add --no-cache neovim
 
-workdir /copy
-run touch "hello world!"
-
 workdir /copy/lib
 workdir /usr/lib
 run cp \
