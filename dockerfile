@@ -3,7 +3,7 @@ from alpine as build
 
 	# create decompression script
 	workdir /rootfs/
-	run echo -en "xz -d /copy.tar.xz; cd /copy; busybox tar -xf /copy.tar; busybox rm /copy.tar; busybox cp -rf /copy/* /" > /rootfs/claw.sh && chmod +x /rootfs/claw.sh
+	run echo -en "[ -f /copy.tar.xz ] && ( xz -d /copy.tar.xz; cd /copy; busybox tar -xf /copy.tar; busybox rm /copy.tar; busybox cp -rf /copy/* /) || true" > /rootfs/claw.sh && chmod +x /rootfs/claw.sh
 
 	# copy libc 
 	workdir /rootfs/lib 

@@ -27,7 +27,6 @@ run cp \
 workdir /copy/bin
 workdir /usr/bin
 run cp ./nvim /copy/bin
-cmd [ "sh", "-c", "ls /copy/bin"]
 
 # bin stage (post claw)
 from claw as bin
