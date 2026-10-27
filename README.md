@@ -48,3 +48,11 @@ workdir /
 cmd [ "sh", "-c", "./claw.sh; nvim -v" ]
 ```
 
+# this produces a very small image (claw-docker-neovim) ( the build and claw images can be deleted or discarded at this point) 
+```
+IMAGE                             ID             DISK USAGE   CONTENT SIZE   EXTRA
+claw-docker-neovim-build:latest   9162ae5c4882       40.6MB             0B    U
+claw-docker-neovim-claw:latest    4a33cfdbf75c       3.92MB             0B    U
+claw-docker-neovim:latest         5db675f65dda       3.92MB             0B    U
+```
+
