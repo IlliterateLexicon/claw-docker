@@ -1,4 +1,0 @@
-services:
-  neovim:       { build: { context: neovim, target: bin,  additional_contexts: { claw: service:neovim-claw  }}}
-  neovim-claw:  { build: { context: claw,   target: claw, additional_contexts: { copy: service:neovim-build }}}
-  neovim-build: { build: { context: neovim, target: build }}
