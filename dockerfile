@@ -38,4 +38,5 @@ from alpine as build
 from scratch as claw
 copy --from=build /rootfs/ /
 workdir /copy
-cmd [ "sh", "-c", "" ]
+workdir /
+cmd [ "sh", "-c", "sh claw.sh; sh init.sh" ]

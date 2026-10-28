@@ -5,10 +5,6 @@ like the scratch image but copys libs and bins from your build step and compress
 
 ```
 services:
-  # first: neovim-build neovim-build runs outputs to copy
-  #  next: neovim-claw compresses the files in copy
-  #  last: files are decompressed and ran from the claw image
-  neovim:       { build: { context: example, target: bin,  additional_contexts: { claw: service:neovim-claw  }}}
   neovim-claw:  { build: { context: .,       target: claw, additional_contexts: { copy: service:neovim-build }}}
   neovim-build: { build: { context: example, target: build }}
 ```
@@ -19,6 +15,16 @@ services:
 from alpine as build 
 run apk add --no-cache neovim
 
+# write the init script (or mount as a volume)
+workdir /copy
+run echo "nvim -v" > ./init.sh
+
+# copy neovim to the bin
+workdir /copy/bin
+workdir /usr/bin
+run cp ./nvim /copy/bin
+
+# copy necicary libs for neovim (discover using trial and error, objump, ldd, etc)
 workdir /copy/lib
 workdir /usr/lib
 run cp \
@@ -32,27 +38,17 @@ run cp \
 	./libuv.so.1 \
 	/copy/lib
 
+# for example neovim needs these lua objects aswell
 workdir /copy/usr/lib/lua/5.1
 workdir /usr/lib/lua/5.1
 run cp \
 	./lpeg.so \
 	/copy/usr/lib/lua/5.1
 
-workdir /copy/bin
-workdir /usr/bin
-run cp ./nvim /copy/bin
-
 # bin stage (post claw, things are uncompressed from /copy)
 from claw as bin
 workdir /
-cmd [ "sh", "-c", "./claw.sh; nvim -v" ]
 ```
 
-# this produces a very small image (claw-docker-neovim) ( the build and claw images can be deleted or discarded at this point) 
-```
-IMAGE                             ID             DISK USAGE   CONTENT SIZE   EXTRA
-claw-docker-neovim-build:latest   9162ae5c4882       40.6MB             0B    U
-claw-docker-neovim-claw:latest    4a33cfdbf75c       3.92MB             0B    U
-claw-docker-neovim:latest         5db675f65dda       3.92MB             0B    U
-```
-
+## run like this
+```docker compose up --build```

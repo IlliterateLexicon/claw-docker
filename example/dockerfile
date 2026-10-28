@@ -1,7 +1,17 @@
-# build stage (pre claw)
+# build stage (pre claw compression, copy things to /copy)
 from alpine as build 
 run apk add --no-cache neovim
 
+# write the init script (or mount as a volume)
+workdir /copy
+run echo "nvim -v" > ./init.sh
+
+# copy neovim to the bin
+workdir /copy/bin
+workdir /usr/bin
+run cp ./nvim /copy/bin
+
+# copy necicary libs for neovim (discover using trial and error, objump, ldd, etc)
 workdir /copy/lib
 workdir /usr/lib
 run cp \
@@ -15,17 +25,13 @@ run cp \
 	./libuv.so.1 \
 	/copy/lib
 
+# for example neovim needs these lua objects aswell
 workdir /copy/usr/lib/lua/5.1
 workdir /usr/lib/lua/5.1
 run cp \
 	./lpeg.so \
 	/copy/usr/lib/lua/5.1
 
-workdir /copy/bin
-workdir /usr/bin
-run cp ./nvim /copy/bin
-
-# bin stage (post claw)
+# bin stage (post claw, things are uncompressed from /copy)
 from claw as bin
 workdir /
-cmd [ "sh", "-c", "./claw.sh; nvim -v" ]
