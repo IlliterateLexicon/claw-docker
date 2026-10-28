@@ -32,6 +32,9 @@ run cp \
 	./lpeg.so \
 	/copy/usr/lib/lua/5.1
 
+from scratch as copy
+copy --from=build /copy /
+
 # bin stage (post claw, things are uncompressed from /copy)
 from claw as bin
 workdir /

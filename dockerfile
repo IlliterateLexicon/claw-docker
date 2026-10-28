@@ -15,7 +15,7 @@ from alpine as build
 	run cp /bin/busybox /usr/bin/xz ./ 
 	run ln -s /bin/busybox ./sh
 
-	copy --from=copy /copy /copy/
+	copy --from=copy / /copy/
 
 	# install gcompat
 	workdir /copy/lib/
